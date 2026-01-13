@@ -1,0 +1,11 @@
+# JetBrains IDEs (IntelliJ, WebStorm, etc.)
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Linux
+*~
