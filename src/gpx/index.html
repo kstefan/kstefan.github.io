@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GPX Merger Tool</title>
+</head>
+<body>
+<div class="container py-4 px-3 mx-auto">
+    <h1>GPX Merger Tool</h1>
+    <div class="mb-3">
+        <label for="gpxFiles" class="form-label">GPX files</label>
+        <input class="form-control" type="file" id="gpxFiles" multiple accept=".gpx,application/gpx+xml">
+    </div>
+    <div class="mb-3">
+        <button id="mergeBtn" type="submit" class="btn btn-primary mb-3">Merge &amp; Download</button>
+    </div>
+
+
+
+    <h2>Log</h2>
+    <pre id="log"></pre>
+
+    <script>
+        const logEl = document.getElementById('log');
+        const mergeBtn = document.getElementById('mergeBtn');
+        const gpxFilesInput = document.getElementById('gpxFiles');
+
+        function log(msg) {
+            logEl.textContent += msg + '\n';
+            console.log(msg);
+        }
+
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsText(file);
+            });
+        }
+
+        function download(text, filename) {
+            const blob = new Blob([text], {type: 'application/gpx+xml'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function parseGpx(text, label) {
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(text, 'application/xml');
+            const err = xml.getElementsByTagName('parsererror')[0];
+            if (err) {
+                throw new Error(`Error parsing ${label}: ${err.textContent}`);
+            }
+            return xml;
+        }
+
+        function mergeDocuments(baseXml, nextXml) {
+            const mergedRoot = baseXml.getElementsByTagName('gpx')[0] || baseXml.documentElement;
+            const trks1 = baseXml.getElementsByTagName('trk');
+            const trks2 = nextXml.getElementsByTagName('trk');
+            const wpts2 = nextXml.getElementsByTagName('wpt');
+            log(`Next file: trk=${trks2.length}, wpt=${wpts2.length}`);
+
+            if (trks1.length > 0 && trks2.length > 0) {
+                const trk1 = trks1[0];
+                const trk2 = trks2[0];
+                const seg1 = trk1.getElementsByTagName('trkseg')[0];
+                const seg2 = trk2.getElementsByTagName('trkseg')[0];
+
+                if (seg1 && seg2) {
+                    const mergedTrk = baseXml.getElementsByTagName('trk')[0];
+                    const mergedSeg = mergedTrk.getElementsByTagName('trkseg')[0] || baseXml.createElement('trkseg');
+                    if (!mergedTrk.contains(mergedSeg)) {
+                        mergedTrk.appendChild(mergedSeg);
+                    }
+
+                    const pts2 = seg2.getElementsByTagName('trkpt');
+                    log(`Merging ${pts2.length} trackpoints from next file`);
+                    for (let i = 0; i < pts2.length; i++) {
+                        const imported = baseXml.importNode(pts2[i], true);
+                        mergedSeg.appendChild(imported);
+                    }
+                } else {
+                    log('One of the tracks has no <trkseg>, skipping track merge.');
+                }
+            } else {
+                log('At least one file has no <trk>, skipping track merge.');
+            }
+
+            log(`Merging ${wpts2.length} waypoints from next file`);
+            for (let i = 0; i < wpts2.length; i++) {
+                const importedWpt = baseXml.importNode(wpts2[i], true);
+                mergedRoot.appendChild(importedWpt);
+            }
+        }
+
+        function mergeGpxStringsMultiple(gpxStrings) {
+            const serializer = new XMLSerializer();
+            let mergedXml = parseGpx(gpxStrings[0], 'file 1');
+            for (let i = 1; i < gpxStrings.length; i++) {
+                log(`Merging file ${i + 1} of ${gpxStrings.length}...`);
+                const nextXml = parseGpx(gpxStrings[i], `file ${i + 1}`);
+                mergeDocuments(mergedXml, nextXml);
+            }
+            return serializer.serializeToString(mergedXml);
+        }
+
+        mergeBtn.addEventListener('click', async () => {
+            logEl.textContent = '';
+            const files = Array.from(gpxFilesInput.files || []);
+
+            if (files.length < 2) {
+                log('Please select at least two GPX files.');
+                return;
+            }
+
+            try {
+                log('Reading files...');
+                const texts = await Promise.all(files.map(readFileAsText));
+
+                log('Merging...');
+                const mergedText = mergeGpxStringsMultiple(texts);
+
+                log('Starting download...');
+                download(mergedText, 'merged.gpx');
+                log('Done.');
+            } catch (e) {
+                console.error(e);
+                log('Error: ' + e.message);
+            }
+        });
+    </script>
+
+
+</div>
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
