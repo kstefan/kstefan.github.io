@@ -1,14 +1,31 @@
 {
   "name": "kstefan.github.io",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "[GPX Merger Tool](gpx/index.html)",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kstefan/kstefan.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kstefan/kstefan.github.io/issues"
+  },
+  "homepage": "https://github.com/kstefan/kstefan.github.io#readme",
   "devDependencies": {
-    "vite": "^7.2.4"
+    "sass": "^1.97.2",
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.8"
   }
 }
