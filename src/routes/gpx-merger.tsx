@@ -1,10 +1,10 @@
 import {createFileRoute} from '@tanstack/react-router'
 import {Map, Mountain, Plus} from "lucide-react";
-import {GpxFileDropZone} from "@/components/GpxFileDropZone.tsx";
+import {FileDropZone} from "@/components/gpx/FileDropZone.tsx";
 import {useState} from "react";
 import type {GPXData} from "@/lib/gpx-parser.ts";
-import {MergeButton} from "@/components/MergeButton.tsx";
-import {ElevationChart} from "@/components/ElevationChart.tsx";
+import {MergeButton} from "@/components/gpx/MergeButton.tsx";
+import {ElevationChart} from "@/components/gpx/ElevationChart.tsx";
 
 export const Route = createFileRoute('/gpx-merger')({
     component: RouteComponent,
@@ -75,7 +75,7 @@ function RouteComponent() {
                 {/* Upload Section */}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in" style={{animationDelay: "0.1s"}}>
                     {gpxFiles.map((gpxData, index) => (
-                        <GpxFileDropZone
+                        <FileDropZone
                             key={index}
                             label={`GPX File ${index + 1}`}
                             gpxData={gpxData}

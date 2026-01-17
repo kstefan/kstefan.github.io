@@ -5,7 +5,7 @@ import {type GPXData, parseGPX, getTotalPoints, getTotalDistance } from "@/lib/g
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-interface GpxFileDropZoneProps {
+interface FileDropZoneProps {
   label: string;
   gpxData: GPXData | null;
   onFileLoaded: (data: GPXData) => void;
@@ -13,7 +13,7 @@ interface GpxFileDropZoneProps {
   onRemove?: () => void;
 }
 
-export function GpxFileDropZone({ label, gpxData, onFileLoaded, onClear, onRemove }: GpxFileDropZoneProps) {
+export function FileDropZone({ label, gpxData, onFileLoaded, onClear, onRemove }: FileDropZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
