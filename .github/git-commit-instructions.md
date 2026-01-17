@@ -1,0 +1,3 @@
+- Use Conventional Commits style https://www.conventionalcommits.org/en/v1.0.0/ for commit messages.
+- Examples of commit messages:
+  - feat: add a new user login feature
