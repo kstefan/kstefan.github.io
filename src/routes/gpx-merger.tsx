@@ -45,7 +45,7 @@ function RouteComponent() {
     return <div className="min-h-screen bg-gradient-subtle">
         {/* Header */}
         <header className="border-b border-border/50 bg-card/80 backdrop-blur-sm">
-            <div className="container flex h-16 items-center gap-3 px-4">
+            <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-nature">
                     <Map className="h-5 w-5 text-primary-foreground"/>
                 </div>
@@ -56,7 +56,7 @@ function RouteComponent() {
         </header>
 
         {/* Main Content */}
-        <main className="container px-4 py-12">
+        <main className="mx-auto max-w-5xl px-4 py-12">
             <div className="mx-auto max-w-4xl">
                 {/* Hero Section */}
                 <div className="mb-12 text-center animate-fade-in">
