@@ -1,5 +1,5 @@
 import {createFileRoute, Link} from '@tanstack/react-router'
-import {ArrowRight, MapPin, User} from "lucide-react";
+import {ArrowRight, MapPin} from "lucide-react";
 
 export const Route = createFileRoute('/')({
     component: Index,
@@ -11,9 +11,8 @@ function Index() {
         <section className="relative flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
             <div className="absolute inset-0 -z-10 bg-linear-to-b from-primary/5 via-background to-background"/>
 
-            <div
-                className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-linear-to-br from-primary to-primary/60 shadow-lg">
-                <User className="h-12 w-12 text-primary-foreground"/>
+            <div className="mb-6 h-24 w-24 overflow-hidden rounded-full bg-linear-to-br from-primary to-primary/60 shadow-lg">
+                <img src="/me.jpg" alt="Karel Štefan" className="h-full w-full object-cover"/>
             </div>
 
             <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
